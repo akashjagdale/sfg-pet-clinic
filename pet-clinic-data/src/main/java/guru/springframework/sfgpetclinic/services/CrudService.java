@@ -10,8 +10,8 @@ public interface CrudService<T, ID> {
 
     Set<T> findAll();
 
-    void delete(T object);
+    Boolean delete(T object);
 
-    void deleteById(ID id);
+    T deleteById(ID id);
 
 }
