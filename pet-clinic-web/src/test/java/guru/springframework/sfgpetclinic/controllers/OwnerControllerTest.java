@@ -16,11 +16,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,6 +83,53 @@ class OwnerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("owners/ownerDetails"))
                 .andExpect(model().attribute("owner", Matchers.hasProperty("id", Matchers.is(1L))));
+    }
+
+    @Test
+    void testInitCreationForm() throws Exception {
+        mockMvc.perform(get("/owners/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/createOrUpdateOwnerForm"))
+                .andExpect(model().attributeExists("owner"));
+
+        verifyZeroInteractions(service);
+    }
+
+    @Test
+    void testProcessCreationForm() throws Exception {
+        when(service.save(any())).thenReturn(Owner.builder().id(1L).build());
+
+        mockMvc.perform(post("/owners/new"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/1"))
+                .andExpect(model().attributeExists("owner"));
+
+        verify(service, times(1)).save(any());
+    }
+
+
+    @Test
+    void testInitUpdateForm() throws Exception {
+        when(service.findById(anyLong())).thenReturn(Owner.builder().id(1L).build());
+
+        mockMvc.perform(get("/owners/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/createOrUpdateOwnerForm"))
+                .andExpect(model().attributeExists("owner"));
+
+        verify(service, times(1)).findById(anyLong());
+    }
+
+    @Test
+    void testProcessUpdateForm() throws Exception {
+        when(service.save(any())).thenReturn(Owner.builder().id(1L).build());
+
+        mockMvc.perform(post("/owners/1/edit"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/1"))
+                .andExpect(model().attributeExists("owner"));
+
+        verify(service, times(1)).save(any());
     }
 
 }
