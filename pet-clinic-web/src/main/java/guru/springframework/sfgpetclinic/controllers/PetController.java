@@ -6,6 +6,7 @@ import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import guru.springframework.sfgpetclinic.services.PetService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 
+@ComponentScan(basePackages = {"guru.springframework.sfgpetclinic.services"})
 @RequestMapping("/owners/{ownerId}")
 @Controller
 public class PetController {
