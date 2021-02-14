@@ -5,8 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Visit extends BaseEntity {
 
     @Column(name = "date")
-    private LocalDate localDate;
+    private LocalDate date;
 
     @Column(name = "description")
     private String description;
